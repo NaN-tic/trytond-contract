@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY, YEARLY
 from decimal import Decimal
 from itertools import groupby
-from sql import Column, Null, Literal
+from sql import Column, Null, Literal, Desc
 from sql.conditionals import Case
 from sql.aggregate import Max, Min, Sum
 
@@ -19,7 +19,8 @@ from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.modules.product import price_digits
 
 __all__ = ['ContractService', 'Contract', 'ContractLine',
-    'ContractConsumption', 'CreateConsumptionsStart', 'CreateConsumptions']
+           'ContractConsumption', 'CreateConsumptionsStart',
+           'CreateConsumptions']
 
 FREQS = [
     (None, ''),
@@ -500,9 +501,11 @@ class ContractLine(ModelSQL, ModelView):
     unit_price = fields.Numeric('Unit Price', digits=price_digits,
         required=True)
     last_consumption_date = fields.Function(fields.Date(
-            'Last Consumption Date'), 'get_last_consumption_date')
+            'Last Consumption Date'), 'get_last_consumption_date',
+            searcher = 'search_last_consumption_dates')
     last_consumption_invoice_date = fields.Function(fields.Date(
-            'Last Invoice Date'), 'get_last_consumption_invoice_date')
+            'Last Invoice Date'), 'get_last_consumption_date',
+            searcher='search_last_consumption_dates')
     consumptions = fields.One2Many('contract.consumption', 'contract_line',
         'Consumptions', readonly=True)
     sequence = fields.Integer('Sequence')
@@ -524,6 +527,7 @@ class ContractLine(ModelSQL, ModelView):
 
         # start_date not null
         table.not_null_action('start_date', 'remove')
+
 
     @staticmethod
     def order_sequence(tables):
@@ -571,7 +575,7 @@ class ContractLine(ModelSQL, ModelView):
         line_ids = [l.id for l in lines]
         values = dict.fromkeys(line_ids, None)
         cursor.execute(*table.select(table.contract_line,
-                    Max(table.end_period_date).cast(Consumption.end_period_date.sql_type().base),
+                Max(table.end_period_date).cast(Consumption.end_period_date.sql_type().base),
                 where=reduce_ids(table.contract_line, line_ids),
                 group_by=table.contract_line))
         values.update(dict(cursor.fetchall()))
@@ -593,6 +597,22 @@ class ContractLine(ModelSQL, ModelView):
         values.update(dict(cursor.fetchall()))
         return values
 
+    @classmethod
+    def search_last_consumption_dates(cls, name, clause):
+        pool = Pool()
+        Consumption= pool.get('contract.consumption')
+
+        res = {
+            'last_consumption_date' : 'end_period_date',
+            'last_consumption_invoice_date' : 'invoice_date',
+        }
+        line = Consumption.__table__()
+        Operator = fields.SQL_OPERATORS[clause[1]]
+        column = Column(line, res[clause[0]])
+        query = line.select(line.contract_line,
+            group_by=(line.contract_line),
+            having=Operator(Max(column),clause[2]))
+        return [('id','in', query)]
 
     def get_consumption(self, start_date, end_date, invoice_date, start_period,
             finish_period):
