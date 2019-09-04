@@ -776,7 +776,7 @@ class ContractConsumption(ModelSQL, ModelView):
             }
         invoice_line.quantity = 1
         if self.end_period_date == self.init_period_date:
-            rate = 0.0
+            rate = Decimal(0)
         else:
             # Compute quantity based on dates
             # We add 1 day to end_date and end_period date to correctly
