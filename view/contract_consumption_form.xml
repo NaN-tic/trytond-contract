@@ -18,5 +18,5 @@
     <field name="end_period_date"/>
     <field name="invoice_lines" colspan="4"/>
     <field name="credit_lines" colspan="4"/>
-    <button name="invoice" icon="tryton-go-next" colspan="4"/>
+    <button name="invoice" icon="tryton-forward" colspan="4"/>
 </form>

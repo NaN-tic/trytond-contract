@@ -158,11 +158,11 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
                     },
                 'confirm': {
                     'invisible': Eval('state') != 'draft',
-                    'icon': 'tryton-go-next',
+                    'icon': 'tryton-forward',
                     },
                 'finish': {
                     'invisible': Eval('state') != 'confirmed',
-                    'icon': 'tryton-go-next',
+                    'icon': 'tryton-forward',
                 },
                 'cancel': {
                     'invisible': ~Eval('state').in_(['draft', 'confirmed']),
@@ -690,7 +690,7 @@ class ContractConsumption(ModelSQL, ModelView):
         super(ContractConsumption, cls).__setup__()
         cls._buttons.update({
                 'invoice': {
-                    'icon': 'tryton-go-next',
+                    'icon': 'tryton-forward',
                     },
                 })
 
