@@ -548,10 +548,10 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
             ('contract.state',) + tuple(clause[1:]),
             ]
 
-    @fields.depends('service', 'unit_price', 'description')
+    @fields.depends('service', '_parent_service.rec_name', 'unit_price', 'description')
     def on_change_service(self):
         if self.service:
-            self.name = self.service.rec_name
+            name = self.service.rec_name
             if not self.unit_price:
                 self.unit_price = self.service.product.list_price
             if not self.description:
@@ -848,7 +848,10 @@ class ContractConsumption(ModelSQL, ModelView):
         if not journal:
             raise UserError(gettext('contract.missing_journal'))
 
-        values = dict(keys)
+        values = {}
+        for key, value in keys:
+            if key in Invoice._fields:
+                values[key] = value
         values['invoice_address'] = values['party'].address_get('invoice')
         invoice = Invoice(**values)
         invoice.on_change_party()

@@ -51,6 +51,7 @@ Create party::
     >>> Party = Model.get('party.party')
     >>> customer = Party(name='Customer')
     >>> customer.customer_payment_term = payment_term
+    >>> customer.account_receivable = accounts['receivable']
     >>> customer.save()
 
 Configure contract::
