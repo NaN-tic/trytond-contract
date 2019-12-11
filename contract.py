@@ -173,9 +173,8 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     @classmethod
     def __register__(cls, module_name):
         Line = Pool().get('contract.line')
-        TableHandler = backend.get('TableHandler')
 
-        handler = TableHandler(cls, module_name)
+        handler = backend.TableHandler(cls, module_name)
         first_invoice_date_exist = handler.column_exist('first_invoice_date')
 
         if not handler.column_exist('number'):
@@ -185,7 +184,7 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
 
         table = cls.__table__()
         line = Line.__table__()
-        line_handler = TableHandler(Line, module_name)
+        line_handler = backend.TableHandler(Line, module_name)
         cursor = Transaction().connection.cursor()
 
         # Changed state field values
@@ -519,8 +518,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        table = TableHandler(cls, module_name)
+        table = backend.TableHandler(cls, module_name)
         super(ContractLine, cls).__register__(module_name)
 
         # start_date not null
@@ -576,7 +574,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
                 where=reduce_ids(table.contract_line, line_ids),
                 group_by=table.contract_line))
         values.update(dict(cursor.fetchall()))
-        if backend.name() == 'sqlite':
+        if backend.name == 'sqlite':
             for id, value in values.items():
                 if value is not None:
                     values[id] = datetime.date(*[int(x) for x in value.split('-', 2)])
