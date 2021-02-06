@@ -9,5 +9,5 @@
     <field name="invoice_date"/>
     <field name="init_period_date"/>
     <field name="end_period_date"/>
-    <button name="invoice" tree_invisible="1"/>
+    <button name="generate_invoice" tree_invisible="1"/>
 </tree>
