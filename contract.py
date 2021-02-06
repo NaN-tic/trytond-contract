@@ -166,11 +166,11 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
                     },
                 'confirm': {
                     'invisible': Eval('state') != 'draft',
-                    'icon': 'tryton-go-next',
+                    'icon': 'tryton-forward',
                     },
                 'finish': {
                     'invisible': Eval('state') != 'confirmed',
-                    'icon': 'tryton-go-next',
+                    'icon': 'tryton-forward',
                 },
                 'cancel': {
                     'invisible': ~Eval('state').in_(['draft', 'confirmed']),
