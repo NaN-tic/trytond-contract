@@ -113,6 +113,7 @@ Create Monthly Contract::
     >>> Contract = Model.get('contract')
     >>> contract = Contract()
     >>> contract.party = customer
+    >>> contract.reference = 'TEST'
     >>> contract.payment_term == payment_term
     True
     >>> contract.freq = 'monthly'
@@ -243,6 +244,9 @@ Create invoice on 2015-04-01::
     >>> invoices = Invoice.find([])
     >>> len(invoices)
     4
+    >>> invoice = invoices[0]
+    >>> invoice.reference == contract.reference
+    True
 
 Check invoice lines amount::
 

@@ -950,9 +950,12 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice.account = invoice.on_change_with_account()
         if lines:
             # consumption, invoice_line = line
-            references = [
-                line[0].contract_line.contract.reference for line in lines]
-            invoice.reference = ', '.join(list(set(references)))
+            references = set()
+            for line in lines:
+                reference = line[0].contract_line.contract.reference
+                if reference:
+                    references.add(reference)
+            invoice.reference = ', '.join(list(references))
         return invoice
 
     @classmethod
