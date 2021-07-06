@@ -948,7 +948,10 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice.journal = journal
         invoice.payment_term = values['payment_term']
         invoice.account = invoice.on_change_with_account()
-        if lines:
+        if values.get('contract'):
+            contract = values['contract']
+            invoice.reference = contract.reference
+        elif lines:
             # consumption, invoice_line = line
             references = set()
             for line in lines:
