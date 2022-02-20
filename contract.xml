@@ -504,7 +504,32 @@
             <field name="act_window" ref="act_contract_review_line"/>
         </record>
 
-        <!-- Menus -->
+	<!-- Global rules -->
+	<record model="ir.rule.group" id="rule_group_contract_companies">
+            <field name="name">User in companies</field>
+            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_contract_companies">
+            <field name="domain"
+                eval="[('company', 'in', Eval('companies', []))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_contract_companies"/>
+        </record>
+
+	<record model="ir.rule.group" id="rule_group_contract_review_companies">
+            <field name="name">User in companies</field>
+            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_contract_review_companies">
+            <field name="domain"
+                eval="[('company', 'in', Eval('companies', []))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_contract_review_companies"/>
+        </record>
+
+	<!-- Menus -->
         <record model="ir.ui.icon" id="contract_icon">
             <field name="name">tryton-membership</field>
             <field name="path">icons/tryton-membership.svg</field>

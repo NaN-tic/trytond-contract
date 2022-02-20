@@ -5,9 +5,10 @@ import unittest
 import trytond.tests.test_tryton
 from trytond.tests.test_tryton import ModuleTestCase
 from trytond.tests.test_tryton import doctest_teardown, doctest_checker
+from trytond.modules.company.tests import CompanyTestMixin
 
 
-class TestContractCase(ModuleTestCase):
+class TestContractCase(CompanyTestMixin, ModuleTestCase):
     'Test Contract module'
     module = 'contract'
 

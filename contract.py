@@ -115,7 +115,10 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     currency_digits = fields.Function(fields.Integer('Currency Digits'),
         'on_change_with_currency_digits')
     party = fields.Many2One('party.party', 'Party', required=True,
-        states=_STATES, depends=_DEPENDS)
+        context={
+            'company': Eval('company', -1),
+            },
+        states=_STATES, depends=_DEPENDS + ['company'])
     number = fields.Char('Number', select=True, states=_STATES,
         depends=_DEPENDS)
     reference = fields.Char('Reference')

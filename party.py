@@ -3,6 +3,7 @@
 from trytond import backend
 from trytond.model import ModelSQL, fields
 from trytond.pool import PoolMeta, Pool
+from trytond.pyson import Eval
 from trytond.tools.multivalue import migrate_property
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
@@ -40,7 +41,11 @@ class PartyContractGroupingMethod(CompanyValueMixin, ModelSQL):
     "Party Contract Grouping Method"
     __name__ = 'party.party.contract_grouping_method'
     party = fields.Many2One(
-        'party.party', "Party", ondelete='CASCADE', select=True)
+        'party.party', "Party", ondelete='CASCADE', select=True,
+        context={
+            'company': Eval('company', -1),
+            },
+        depends=['company'])
     contract_grouping_method = contract_grouping_method
 
     @classmethod
