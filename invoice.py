@@ -76,15 +76,14 @@ class CreditInvoice(metaclass=PoolMeta):
 
     def default_start(self, fields):
         pool = Pool()
-        Invoice = pool.get('account.invoice')
         Consumption = pool.get('contract.consumption')
 
-        default = super(CreditInvoice, self).default_start(fields)
+        default = super().default_start(fields)
         default.update({
             'from_contract': False,
             'reinvoice_contract': False,
             })
-        for invoice in Invoice.browse(Transaction().context['active_ids']):
+        for invoice in self.records:
             for line in invoice.lines:
                 if isinstance(line.origin, Consumption):
                     default['from_contract'] = True
@@ -93,17 +92,15 @@ class CreditInvoice(metaclass=PoolMeta):
 
     def do_credit(self, action):
         pool = Pool()
-        Invoice = pool.get('account.invoice')
         Consumption = pool.get('contract.consumption')
-        transaction = Transaction()
 
-        action, data = super(CreditInvoice, self).do_credit(action)
+        action, data = super().do_credit(action)
         if self.start.reinvoice_contract:
             consumptions = set([])
-            for invoice in Invoice.browse(transaction.context['active_ids']):
+            for invoice in self.records:
                 for line in invoice.lines:
                     if isinstance(line.origin, Consumption):
                         consumptions.add(line.origin)
-            with transaction.set_context(force_reinvoice=True):
+            with Transaction().set_context(force_reinvoice=True):
                 Consumption.invoice(list(consumptions))
         return action, data
