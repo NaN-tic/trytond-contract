@@ -405,18 +405,6 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
-        <record model="ir.rule.group" id="rule_group_contract_review">
-            <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_contract_review1">
-            <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', None))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_contract_review"/>
-        </record>
-
         <!-- create review cron -->
         <record model="ir.cron" id="cron_create_review">
             <field name="interval_number" eval="1"/>
@@ -545,40 +533,6 @@
                 id="menu_contract_group_contract_admin">
             <field name="menu" ref="menu_contract"/>
             <field name="group" ref="group_contract_admin"/>
-        </record>
-
-        <record model="ir.rule.group" id="rule_group_contract">
-            <field name="name">Contract Company Rule</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_contract1">
-            <field name="domain"
-                eval="[('company', '=', Eval('user', {}).get('company', None))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_contract"/>
-        </record>
-        <record model="ir.rule.group" id="rule_group_contract_line">
-              <field name="name">Contract Line Company Rule</field>
-            <field name="model" search="[('model', '=', 'contract.line')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_contract_line1">
-            <field name="domain"
-                eval="[('contract.company', '=', Eval('user', {}).get('company', None))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_contract_line"/>
-        </record>
-        <record model="ir.rule.group" id="rule_group_contract_consumption">
-              <field name="name">Contract Consumption Company Rule</field>
-            <field name="model" search="[('model', '=', 'contract.consumption')]"/>
-            <field name="global_p" eval="True"/>
-        </record>
-        <record model="ir.rule" id="rule_contract_consumption1">
-            <field name="domain"
-                eval="[('contract_line.contract.company', '=', Eval('user', {}).get('company', None))]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_contract_consumption"/>
         </record>
 
         <menuitem name="Configuration" parent="menu_contract"
