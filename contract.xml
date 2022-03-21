@@ -405,6 +405,18 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.rule.group" id="rule_group_contract_review">
+            <field name="name">User in company</field>
+            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="global_p" eval="True"/>
+        </record>
+        <record model="ir.rule" id="rule_contract_review1">
+            <field name="domain"
+                eval="[('company', 'in', Eval('companies', []))]"
+                pyson="1"/>
+            <field name="rule_group" ref="rule_group_contract_review"/>
+        </record>
+
         <!-- create review cron -->
         <record model="ir.cron" id="cron_create_review">
             <field name="interval_number" eval="1"/>

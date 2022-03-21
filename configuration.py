@@ -99,9 +99,8 @@ class ConfigurationAccount(ModelSQL, CompanyValueMixin):
             ('type', '=', 'revenue'),
             ],
         context={
-            'company': Eval('company', -1),
-            },
-        depends=['company'])
+            'company': Eval('company'),
+        }, depends=['company'])
 
     @classmethod
     def __register__(cls, module_name):
