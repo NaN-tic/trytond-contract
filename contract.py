@@ -543,11 +543,11 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
         searcher='search_contract_state')
     service = fields.Many2One('contract.service', 'Service', required=True,
         states={
-            'readonly': Bool(Eval('consumptions', [-1])),
-        })
+            'readonly': Bool(Eval('has_consumptions')),
+        }, depends=['has_consumptions'])
     start_date = fields.Date('Start Date',
         states={
-            'readonly': Bool(Eval('consumptions', [-1])),
+            'readonly': Bool(Eval('has_consumptions')),
             'required': Eval('contract_state') == 'confirmed',
             },
         domain=[
@@ -555,7 +555,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
                 ('start_date', '<=', Eval('end_date', None)),
                 ()),
             ],
-        depends=['end_date', 'contract_state'])
+        depends=['end_date', 'contract_state', 'has_consumptions'])
     end_date = fields.Date('End Date',
         states={
             'required': Eval('contract_state') == 'finished',
@@ -577,6 +577,8 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
             searcher='search_last_consumption_dates')
     consumptions = fields.One2Many('contract.consumption', 'contract_line',
         'Consumptions', readonly=True)
+    has_consumptions = fields.Function(fields.Boolean("Has Consumptions"),
+        'get_has_consumptions')
 
     @classmethod
     def __setup__(cls):
@@ -692,6 +694,13 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
         consumption.end_period_date = finish_period
         consumption.invoice_date = invoice_date
         return consumption
+
+    @classmethod
+    def get_has_consumptions(cls, lines, name):
+        res = dict((x.id, False) for x in lines)
+        for line in lines:
+            res[line.id] = True if line.consumptions else False
+        return res
 
     @classmethod
     def delete(cls, lines):
