@@ -523,7 +523,7 @@
         </record>
 
         <record model="ir.rule.group" id="rule_group_contract">
-            <field name="name">Contract Company Rule</field>
+            <field name="name">User in company</field>
             <field name="model" search="[('model', '=', 'contract')]"/>
             <field name="global_p" eval="True"/>
         </record>
@@ -534,7 +534,7 @@
             <field name="rule_group" ref="rule_group_contract"/>
         </record>
         <record model="ir.rule.group" id="rule_group_contract_line">
-              <field name="name">Contract Line Company Rule</field>
+              <field name="name">User in company</field>
             <field name="model" search="[('model', '=', 'contract.line')]"/>
             <field name="global_p" eval="True"/>
         </record>
@@ -545,7 +545,7 @@
             <field name="rule_group" ref="rule_group_contract_line"/>
         </record>
         <record model="ir.rule.group" id="rule_group_contract_consumption">
-              <field name="name">Contract Consumption Company Rule</field>
+              <field name="name">User in company</field>
             <field name="model" search="[('model', '=', 'contract.consumption')]"/>
             <field name="global_p" eval="True"/>
         </record>

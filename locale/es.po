@@ -190,6 +190,10 @@ msgctxt "field:contract.line,end_date:"
 msgid "End Date"
 msgstr "Fecha finalización"
 
+msgctxt "field:contract.line,has_consumptions:"
+msgid "Has Consumptions"
+msgstr "Tiene consumos"
+
 msgctxt "field:contract.line,last_consumption_date:"
 msgid "Last Consumption Date"
 msgstr "Fecha último consumo"
@@ -217,6 +221,10 @@ msgstr "Actividades"
 msgctxt "field:contract.review,alarm_date:"
 msgid "Alarm Date"
 msgstr "Fecha de alarma"
+
+msgctxt "field:contract.review,company:"
+msgid "Company"
+msgstr "Empresa"
 
 msgctxt "field:contract.review,contract:"
 msgid "Contract"
@@ -273,6 +281,14 @@ msgstr "Producto"
 msgctxt "field:party.party,contract_grouping_method:"
 msgid "Contract Grouping Method"
 msgstr "Método agrupación contratos"
+
+msgctxt "field:party.party,contract_grouping_methods:"
+msgid "Contract Grouping Methods"
+msgstr "Métodos agrupación contrato"
+
+msgctxt "field:party.party.contract_grouping_method,company:"
+msgid "Company"
+msgstr "Empresa"
 
 msgctxt "field:party.party.contract_grouping_method,contract_grouping_method:"
 msgid "Contract Grouping Method"
@@ -593,16 +609,20 @@ msgid "Processing"
 msgstr "En proceso"
 
 msgctxt "model:ir.rule.group,name:rule_group_contract"
-msgid "Contract Company Rule"
-msgstr "Regla de contrato de la empresa"
+msgid "User in company"
+msgstr "Usuario en las empresas"
 
 msgctxt "model:ir.rule.group,name:rule_group_contract_consumption"
-msgid "Contract Consumption Company Rule"
-msgstr "Norma de empresa de consumo de contrato"
+msgid "User in company"
+msgstr "Usuario en las empresas"
 
 msgctxt "model:ir.rule.group,name:rule_group_contract_line"
-msgid "Contract Line Company Rule"
-msgstr "Regla de la empresa de línea de contrato"
+msgid "User in company"
+msgstr "Usuario en las empresas"
+
+msgctxt "model:ir.rule.group,name:rule_group_contract_review"
+msgid "User in company"
+msgstr "Usuario en las empresas"
 
 msgctxt "model:ir.sequence,name:sequence_contract"
 msgid "Contract"
@@ -741,6 +761,16 @@ msgid "Group contracts"
 msgstr "Agrupar contratos"
 
 msgctxt "selection:party.party,contract_grouping_method:"
+msgid "None"
+msgstr "Ninguno"
+
+msgctxt ""
+"selection:party.party.contract_grouping_method,contract_grouping_method:"
+msgid "Group contracts"
+msgstr "Agrupar contratos"
+
+msgctxt ""
+"selection:party.party.contract_grouping_method,contract_grouping_method:"
 msgid "None"
 msgstr "Ninguno"
 
