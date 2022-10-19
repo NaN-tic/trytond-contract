@@ -544,7 +544,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
     service = fields.Many2One('contract.service', 'Service', required=True,
         states={
             'readonly': Bool(Eval('consumptions', [-1])),
-        }, depends=['consumptions'])
+        })
     start_date = fields.Date('Start Date',
         states={
             'readonly': Bool(Eval('consumptions', [-1])),
