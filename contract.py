@@ -555,7 +555,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
                 ('start_date', '<=', Eval('end_date', None)),
                 ()),
             ],
-        depends=['end_date', 'contract_state', 'consumptions'])
+        depends=['end_date', 'contract_state'])
     end_date = fields.Date('End Date',
         states={
             'required': Eval('contract_state') == 'finished',
