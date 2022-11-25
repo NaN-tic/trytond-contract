@@ -102,5 +102,5 @@ class CreditInvoice(metaclass=PoolMeta):
                     if isinstance(line.origin, Consumption):
                         consumptions.add(line.origin)
             with Transaction().set_context(force_reinvoice=True):
-                Consumption.invoice(list(consumptions))
+                Consumption.generate_invoice(list(consumptions))
         return action, data

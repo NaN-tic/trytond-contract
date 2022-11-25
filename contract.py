@@ -20,6 +20,7 @@ from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.modules.product import price_digits
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
+from trytond.modules.product import round_price
 
 try:
     from trytond.modules.analytic_account import AnalyticMixin
@@ -856,10 +857,7 @@ class ContractConsumption(ModelSQL, ModelView):
                     - self.start_date).total_seconds() /
                 (self.end_period_date + datetime.timedelta(days=1) -
                     self.init_period_date).total_seconds())
-        unit_price = self.contract_line.unit_price * rate
-        digits = invoice_line.__class__.unit_price.digits
-        unit_price = unit_price.quantize(Decimal(str(10 ** -digits[1])))
-        invoice_line.unit_price = unit_price
+        invoice_line.unit_price = round_price(self.contract_line.unit_price * rate)
         invoice_line.party = self.contract_line.contract.party
         taxes = []
         if invoice_line.product:
