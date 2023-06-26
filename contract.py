@@ -809,30 +809,6 @@ class ContractConsumption(ModelSQL, ModelView):
         end = lang.strftime(self.end_date)
         return start, end
 
-
-    def _get_tax_rule_pattern(self):
-        '''
-        Get tax rule pattern
-        '''
-        return {}
-
-    @fields.depends(methods=['_get_tax_rule_pattern'])
-    def compute_taxes(self, product, party):
-        taxes = set()
-        pattern = self._get_tax_rule_pattern()
-        for tax in product.customer_taxes_used:
-            if party and party.customer_tax_rule:
-                tax_ids = party.customer_tax_rule.apply(tax, pattern)
-                if tax_ids:
-                    taxes.update(tax_ids)
-                continue
-            taxes.add(tax.id)
-        if party and party.customer_tax_rule:
-            tax_ids = party.customer_tax_rule.apply(None, pattern)
-            if tax_ids:
-                taxes.update(tax_ids)
-        return list(taxes)
-
     def get_invoice_line(self):
         pool = Pool()
         InvoiceLine = pool.get('account.invoice.line')
@@ -855,9 +831,19 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice_line.company = self.contract_line.contract.company
         invoice_line.currency = self.contract_line.contract.currency
         invoice_line.sequence = self.contract_line.sequence
+        invoice_line.party = self.contract_line.contract.party
+
         invoice_line.product = None
         if self.contract_line.service:
             invoice_line.product = self.contract_line.service.product
+            invoice_line.on_change_product()
+
+            if not invoice_line.account:
+                raise UserError(gettext(
+                    'contract.missing_account_revenue',
+                        contract_line=self.contract_line.rec_name,
+                        product=invoice_line.product.rec_name))
+
         start_date, end_date = self._get_start_end_date()
         invoice_line.description = '[%(start)s - %(end)s] %(name)s' % {
             'start': start_date,
@@ -876,23 +862,14 @@ class ContractConsumption(ModelSQL, ModelView):
                     - self.start_date).total_seconds() /
                 (self.end_period_date + datetime.timedelta(days=1) -
                     self.init_period_date).total_seconds())
-        invoice_line.party = self.contract_line.contract.party
 
         if invoice_line.product:
-            invoice_line.unit = invoice_line.product.default_uom
-            party = invoice_line.party
-
-            # Set taxes before unit_price to have taxes in context of sale price
-            invoice_line.taxes = self.compute_taxes(invoice_line.product, party)
-
-            invoice_line.account = invoice_line.product.account_revenue_used
             if not invoice_line.account:
                 raise UserError(gettext(
                     'contract.missing_account_revenue',
                         contract_line=self.contract_line.rec_name,
                         product=invoice_line.product.rec_name))
         else:
-            invoice_line.unit = None
             for name in ['default_product_account_revenue',
                     'default_category_account_revenue']:
                 invoice_line.account = account_config.get_multivalue(name)
