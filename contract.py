@@ -871,12 +871,6 @@ class ContractConsumption(ModelSQL, ModelView):
                         product=invoice_line.product.rec_name))
 
         start_date, end_date = self._get_start_end_date()
-        invoice_line.description = '[%(start)s - %(end)s] %(name)s' % {
-            'start': start_date,
-            'end': end_date,
-            'name': self.contract_line.description,
-            }
-        invoice_line.quantity = 1
         if self.end_period_date == self.init_period_date:
             rate = Decimal(0)
         else:
@@ -888,6 +882,24 @@ class ContractConsumption(ModelSQL, ModelView):
                     - self.start_date).total_seconds() /
                 (self.end_period_date + datetime.timedelta(days=1) -
                     self.init_period_date).total_seconds())
+
+        invoice_line.quantity = 1
+        invoice_line.on_change_product()
+
+        # set unit_price from service in case on_change_product calculate price
+        # from the product or from party price list
+        unit_price = round_price(self.contract_line.unit_price * rate)
+        if hasattr(InvoiceLine, 'gross_unit_price'):
+            invoice_line.gross_unit_price = unit_price
+            invoice_line.update_prices()
+        else:
+            invoice_line.unit_price = unit_price
+
+        invoice_line.description = '[%(start)s - %(end)s] %(name)s' % {
+            'start': start_date,
+            'end': end_date,
+            'name': self.contract_line.description,
+            }
 
         if invoice_line.product:
             if not invoice_line.account:
@@ -905,8 +917,6 @@ class ContractConsumption(ModelSQL, ModelView):
                 raise UserError(gettext(
                     'contract.missing_account_revenue_property',
                         contract_line=self.contract_line.rec_name))
-
-        invoice_line.unit_price = round_price(self.contract_line.unit_price * rate)
 
         if AnalyticAccountEntry and hasattr(InvoiceLine, 'analytic_accounts'):
             invoice_line.analytic_accounts = AnalyticAccountEntry.copy(
