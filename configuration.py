@@ -99,7 +99,7 @@ class ConfigurationAccount(ModelSQL, CompanyValueMixin):
             ('type', '=', 'revenue'),
             ],
         context={
-            'company': Eval('company'),
+            'company': Eval('company', -1),
         }, depends=['company'])
 
     @classmethod
