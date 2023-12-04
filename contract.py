@@ -1196,7 +1196,8 @@ class ContractReview(Workflow, ModelSQL, ModelView):
     def create_review_cron(cls, args=None):
         cls.create_reviews()
 
-    def create_reviews():
+    @classmethod
+    def create_reviews(cls):
         pool = Pool()
         Date = pool.get('ir.date')
         today = Date.today()
