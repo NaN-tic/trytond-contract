@@ -64,7 +64,6 @@ class CreditInvoiceStart(metaclass=PoolMeta):
         states={
             'invisible': ~Bool(Eval('from_contract')),
             },
-        depends=['from_contract'],
         help=('If true, the consumption that generated this line will be '
             'reinvoiced.'))
 

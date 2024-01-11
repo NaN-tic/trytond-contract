@@ -54,8 +54,7 @@ class ConfigurationSequence(ModelSQL, CompanyValueMixin):
         domain=[
             ('company', 'in', [Eval('company', -1), None]),
             ('sequence_type', '=', Id('contract', 'sequence_type_contract')),
-            ],
-        depends=['company'])
+            ])
 
     @classmethod
     def default_contract_sequence(cls):

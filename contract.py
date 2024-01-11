@@ -46,7 +46,7 @@ class RRuleMixin(Model):
             ],
         states={
             'required': Bool(Eval('freq')),
-            }, depends=['freq'])
+            })
 
     def rrule_values(self):
         values = {}
@@ -110,31 +110,29 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     __name__ = 'contract'
 
     company = fields.Many2One('company.company', 'Company', required=True,
-        states=_STATES, depends=_DEPENDS)
+        states=_STATES)
     currency = fields.Many2One('currency.currency', 'Currency', required=True,
-        states=_STATES, depends=_DEPENDS)
+        states=_STATES)
     party = fields.Many2One('party.party', 'Party', required=True,
         context={
             'company': Eval('company', -1),
             },
-        states=_STATES, depends=_DEPENDS + ['company'])
-    number = fields.Char('Number', states=_STATES,
-        depends=_DEPENDS)
+        states=_STATES, depends=['company'])
+    number = fields.Char('Number', states=_STATES)
     reference = fields.Char('Reference')
     start_date = fields.Function(fields.Date('Start Date'),
         'get_dates', searcher='search_dates')
     end_date = fields.Function(fields.Date('End Date'),
         'get_dates', searcher='search_dates')
     start_period_date = fields.Date('Start Period Date', required=True,
-        states=_STATES, depends=_DEPENDS)
+        states=_STATES)
     first_invoice_date = fields.Date('First Invoice Date', required=True,
-        states=_STATES, depends=_DEPENDS)
+        states=_STATES)
     lines = fields.One2Many('contract.line', 'contract', 'Lines',
         states={
             'readonly': ~Eval('state').in_(['draft', 'confirmed']),
             'required': Eval('state') == 'confirmed',
-            },
-        depends=['state'])
+            })
     state = fields.Selection(CONTRACT_STATES, 'State',
         required=True, readonly=True)
     payment_term = fields.Many2One('account.invoice.payment_term',
@@ -142,14 +140,12 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     months_renewal = fields.Integer('Months Renewal',
         states={
             'required': Bool(Eval('first_review_date')),
-            },
-        depends=['first_review_date'])
+            })
     first_review_date = fields.Date('First Review Date',
         help="Date on which the actions should be performed.",
         states={
             'required': Bool(Eval('months_renewal')),
-            },
-        depends=['months_renewal'])
+            })
     reviews = fields.One2Many('contract.review', 'contract',
         'Reviews', readonly=True, order=[
             ('review_date', 'ASC')
@@ -158,18 +154,15 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
         help="The deadline date on which the actions should be performed.",
         states={
             'required': Bool(Eval('first_review_date')),
-            },
-        depends=['first_review_date'])
+            })
     review_alarm = fields.TimeDelta('Alarm Date',
         help="The date when actions related to reviews should start to be managed.",
         states={
             'required': Bool(Eval('first_review_date')),
-            },
-        depends=['first_review_date'])
+            })
     last_month_day_invoice = fields.Boolean('Last Month Day Invoice',
         states={'invisible': ~Eval('freq').in_(['monthly',]),
-                'readonly': Eval('state')!='draft'},
-        depends=['freq', 'state'])
+                'readonly': Eval('state')!='draft'})
 
     @classmethod
     def __setup__(cls):
@@ -573,7 +566,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
     service = fields.Many2One('contract.service', 'Service', required=True,
         states={
             'readonly': Bool(Eval('has_consumptions')),
-        }, depends=['has_consumptions'])
+        })
     start_date = fields.Date('Start Date',
         states={
             'readonly': Bool(Eval('has_consumptions')),
@@ -583,8 +576,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
             If(Bool(Eval('end_date')),
                 ('start_date', '<=', Eval('end_date', None)),
                 ()),
-            ],
-        depends=['end_date', 'contract_state', 'has_consumptions'])
+            ])
     end_date = fields.Date('End Date',
         states={
             'required': Eval('contract_state') == 'finished',
@@ -593,8 +585,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
             If(Bool(Eval('end_date')),
                 ('end_date', '>=', Eval('start_date', None)),
                 ()),
-            ],
-        depends=['start_date', 'contract_state'])
+            ])
     description = fields.Text('Description', required=True)
     unit_price = fields.Numeric('Unit Price', digits=price_digits,
         required=True)
@@ -772,23 +763,19 @@ class ContractConsumption(ModelSQL, ModelView):
     init_period_date = fields.Date('Start Period Date', required=True,
         domain=[
             ('init_period_date', '<=', Eval('end_period_date', None)),
-            ],
-        depends=['end_period_date'])
+            ])
     end_period_date = fields.Date('Finish Period Date', required=True,
         domain=[
             ('end_period_date', '>=', Eval('init_period_date', None)),
-            ],
-        depends=['init_period_date'])
+            ])
     start_date = fields.Date('Start Date', required=True,
         domain=[
             ('start_date', '<=', Eval('end_date', None)),
-            ],
-        depends=['end_date'])
+            ])
     end_date = fields.Date('End Date', required=True,
         domain=[
             ('end_date', '>=', Eval('start_date', None)),
-            ],
-        depends=['start_date'])
+            ])
     invoice_date = fields.Date('Invoice Date', required=True)
     invoice_lines = fields.One2Many('account.invoice.line', 'origin',
         'Invoice Lines', readonly=True)
@@ -1117,8 +1104,7 @@ class ContractReview(Workflow, ModelSQL, ModelView):
     lines = fields.One2Many('contract.review.line', 'review', 'Lines',
         states={
             'readonly': ~Eval('state').in_(['pending', 'processing']),
-            },
-        depends=['state'])
+            })
     contract = fields.Many2One('contract', 'Contract', required=True,
         ondelete='CASCADE')
     activities = fields.One2Many('activity.activity', 'resource', 'Activities')
@@ -1131,7 +1117,7 @@ class ContractReview(Workflow, ModelSQL, ModelView):
                 If(Bool(Eval('_parent_contract', {}).get('company', 0)),
                     '=', '!='),
                 Eval('_parent_contract', {}).get('company', -1)),
-            ], depends=['contract'])
+            ])
 
     @classmethod
     def __setup__(cls):
