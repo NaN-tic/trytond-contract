@@ -8,4 +8,8 @@
     <field name="alarm_date"/>
     <field name="state"/>
     <field name="visual" tree_invisible="1"/>
+    <button name="cancelled" tree_invisible="1"/>
+    <button name="pending" tree_invisible="1"/>
+    <button name="processing" tree_invisible="1"/>
+    <button name="done" tree_invisible="1"/>
 </tree>
