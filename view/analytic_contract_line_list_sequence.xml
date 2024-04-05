@@ -1,5 +1,5 @@
 <data>
     <xpath expr="/tree/field[@name='last_consumption_invoice_date']" position="after">
-        <field name="analytic_accounts_size"/>
+        <field name="analytic_accounts_size" optional="1"/>
     </xpath>
 </data>
