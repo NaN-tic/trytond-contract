@@ -170,6 +170,14 @@ msgctxt "field:contract.create_invoices.start,date:"
 msgid "Date"
 msgstr "Data"
 
+msgctxt "field:contract.line,analytic_accounts:"
+msgid "Analytic Accounts"
+msgstr "Comptes analítics"
+
+msgctxt "field:contract.line,analytic_accounts_size:"
+msgid "Analytic Accounts Size"
+msgstr "Mida dels comptes analítics"
+
 msgctxt "field:contract.line,consumptions:"
 msgid "Consumptions"
 msgstr "Consums"
