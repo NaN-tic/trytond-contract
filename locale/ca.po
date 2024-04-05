@@ -228,7 +228,7 @@ msgstr "Empresa"
 
 msgctxt "field:contract.review,contract:"
 msgid "Contract"
-msgstr "Contractes"
+msgstr "Contracte"
 
 msgctxt "field:contract.review,limit_date:"
 msgid "Limit Date"
@@ -284,7 +284,7 @@ msgstr "Mètode d'agrupació de contractes"
 
 msgctxt "field:party.party,contract_grouping_methods:"
 msgid "Contract Grouping Methods"
-msgstr "Mètodes agrupació contracte"
+msgstr "Mètodes agrupació contractes"
 
 msgctxt "field:party.party.contract_grouping_method,company:"
 msgid "Company"
@@ -346,11 +346,11 @@ msgstr "Configuració de contractes"
 
 msgctxt "model:contract.configuration.account,name:"
 msgid "Contract Configuration Accounting"
-msgstr "Configuració comptable de contracte"
+msgstr "Configuració comptable de contractes"
 
 msgctxt "model:contract.configuration.sequence,name:"
 msgid "Contract Configuration Sequence"
-msgstr "Seqüència de configuració del contracte"
+msgstr "Seqüència de configuració del contractes"
 
 msgctxt "model:contract.consumption,name:"
 msgid "Contract Consumption"
@@ -446,7 +446,7 @@ msgstr "Crear revisions"
 
 msgctxt "model:ir.action.act_window.domain,name:"
 msgid "Finished"
-msgstr "Finalitzats"
+msgstr "Finalitzat"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_contract_consumption_domain_all"
@@ -464,7 +464,7 @@ msgstr "Tots"
 
 msgctxt "model:ir.action.act_window.domain,name:act_contract_domain_confirmed"
 msgid "Confirmed"
-msgstr "Confirmats"
+msgstr "Confirmat"
 
 msgctxt "model:ir.action.act_window.domain,name:act_contract_domain_draft"
 msgid "Draft"
@@ -495,8 +495,12 @@ msgstr ""
 "\"%(contract)s\" té consums."
 
 msgctxt "model:ir.message,text:cannot_draft"
-msgid "Contract \"%(contract)s\" can not be moved to draft because it has consumptions."
-msgstr "El contracte \"%(contract)s\" no es pot passar a esborrany perquè té consums."
+msgid ""
+"Contract \"%(contract)s\" can not be moved to draft because it has "
+"consumptions."
+msgstr ""
+"El contracte \"%(contract)s\" no es pot passar a esborrany perquè té "
+"consums."
 
 msgctxt "model:ir.message,text:cannot_finish"
 msgid ""
@@ -598,7 +602,7 @@ msgstr "Esborrany"
 
 msgctxt "model:ir.model.button,string:contract_finish_button"
 msgid "Finish"
-msgstr "Finalitzar"
+msgstr "Finalitza"
 
 msgctxt "model:ir.model.button,string:contract_review_cancelled_button"
 msgid "Cancelled"
@@ -674,7 +678,7 @@ msgstr "Línies"
 
 msgctxt "model:ir.ui.menu,name:menu_contract_service"
 msgid "Contract Services"
-msgstr "Serveis de contracte"
+msgstr "Serveis de contractes"
 
 msgctxt "model:ir.ui.menu,name:menu_create_consumptions"
 msgid "Create Consumptions"
@@ -828,7 +832,7 @@ msgstr "Línia de contracte"
 
 msgctxt "view:contract.review:"
 msgid "Contract"
-msgstr "Contractes"
+msgstr "Contracte"
 
 msgctxt "view:contract.service:"
 msgid "Contract Service"
@@ -848,7 +852,7 @@ msgstr "Revisió"
 
 msgctxt "view:party.party:"
 msgid "Contract"
-msgstr "Contractes"
+msgstr "Contracte"
 
 msgctxt ""
 "wizard_button:contract.create_consumptions,start,create_consumptions:"
@@ -873,4 +877,4 @@ msgstr "D'acord"
 
 msgctxt "wizard_button:contract.create_reviews,start,end:"
 msgid "Cancel"
-msgstr "Cancel·lat"
+msgstr "Cancel·la"
