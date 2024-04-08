@@ -354,7 +354,6 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
         else:
             default = default.copy()
         default.setdefault('number', None)
-        default.setdefault('end_date', None)
         return super(Contract, cls).copy(contracts, default=default)
 
     @classmethod
