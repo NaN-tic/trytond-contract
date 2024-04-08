@@ -1045,7 +1045,6 @@ class ContractConsumption(ModelSQL, ModelView):
             default = {}
         default = default.copy()
         default.setdefault('invoice_lines')
-        default.setdefault('credit_lines')
         return super(ContractConsumption, cls).copy(
             consumptions, default=default)
 
