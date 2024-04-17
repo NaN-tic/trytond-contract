@@ -65,14 +65,14 @@
             <field name="act_window" ref="act_contract"/>
         </record>
         <record model="ir.model.access" id="access_contract">
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_contract_admin">
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
             <field name="group" ref="group_contract_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -83,26 +83,26 @@
         <record model="ir.model.button" id="contract_draft_button">
             <field name="name">draft</field>
             <field name="string">Draft</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
         </record>
 
         <record model="ir.model.button" id="contract_confirm_button">
             <field name="name">confirm</field>
             <field name="string">Confirm</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
         </record>
 
         <record model="ir.model.button" id="contract_finish_button">
             <field name="name">finish</field>
             <field name="string">Finish</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
         </record>
 
         <record model="ir.model.button" id="contract_cancel_button">
             <field name="name">cancel</field>
             <field name="string">Cancel</field>
             <field name="confirm">Cancelled contracts no longer create consumptions. Are you sure you want to cancel this contract?</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
         </record>
 
         <record model="ir.ui.view" id="contract_consumption_view_form">
@@ -178,14 +178,14 @@
             <field name="action" ref="act_consumption_contract_line"/>
         </record>
         <record model="ir.model.access" id="access_contract_consumption">
-            <field name="model" search="[('model', '=', 'contract.consumption')]"/>
+            <field name="model">contract.consumption</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_contract_consumption_admin">
-            <field name="model" search="[('model', '=', 'contract.consumption')]"/>
+            <field name="model">contract.consumption</field>
             <field name="group" ref="group_contract_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -196,7 +196,7 @@
         <record model="ir.model.button" id="contract_consumption_invoice_button">
             <field name="name">generate_invoice</field>
             <field name="string">Invoice</field>
-            <field name="model" search="[('model', '=', 'contract.consumption')]"/>
+            <field name="model">contract.consumption</field>
         </record>
 
         <record model="ir.ui.view" id="contract_line_view_list_sequence">
@@ -230,14 +230,14 @@
             <field name="act_window" ref="act_contract_line"/>
         </record>
         <record model="ir.model.access" id="access_contract_line">
-            <field name="model" search="[('model', '=', 'contract.line')]"/>
+            <field name="model">contract.line</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_contract_line_admin">
-            <field name="model" search="[('model', '=', 'contract.line')]"/>
+            <field name="model">contract.line</field>
             <field name="group" ref="group_contract_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -269,14 +269,14 @@
             <field name="act_window" ref="act_contract_service"/>
         </record>
         <record model="ir.model.access" id="access_contract_service">
-            <field name="model" search="[('model', '=', 'contract.service')]"/>
+            <field name="model">contract.service</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_contract_service_admin">
-            <field name="model" search="[('model', '=', 'contract.service')]"/>
+            <field name="model">contract.service</field>
             <field name="group" ref="group_contract_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -369,7 +369,7 @@
         <record model="ir.action.act_window.domain" id="act_review_domain_to_notice">
             <field name="name">Notice</field>
             <field name="sequence" eval="10"/>
-            <field name="domain" eval="[('alarm_date', '&lt;', DateTime(hour=0, minute=0, second=0, microsecond=0, delta_days=1)), ('state', '=', 'pending')]" pyson="1"/>
+            <field name="domain" eval="[('alarm_date', '&lt;', Date(delta_days=1)), ('state', '=', 'pending')]" pyson="1"/>
             <field name="act_window" ref="act_review"/>
             <field name="count" eval="True"/>
         </record>
@@ -395,14 +395,14 @@
         </record>
 
         <record model="ir.model.access" id="access_contract_review">
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_contract_review_admin">
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
             <field name="group" ref="group_contract_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -412,7 +412,7 @@
 
         <record model="ir.rule.group" id="rule_group_contract_review">
             <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_contract_review1">
@@ -443,7 +443,7 @@
         <record model="ir.model.button" id="contract_review_pending_button">
             <field name="name">pending</field>
             <field name="string">Pending</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
         </record>
         <record model="ir.model.button-res.group"
             id="contract_review_pending_button_contract_admin">
@@ -454,7 +454,7 @@
         <record model="ir.model.button" id="contract_review_processing_button">
             <field name="name">processing</field>
             <field name="string">Processing</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
         </record>
         <record model="ir.model.button-res.group"
             id="contract_review_processing_button_contract_admin">
@@ -465,7 +465,7 @@
         <record model="ir.model.button" id="contract_review_done_button">
             <field name="name">done</field>
             <field name="string">Done</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
         </record>
         <record model="ir.model.button-res.group"
             id="contract_review_done_button_contract_admin">
@@ -476,7 +476,7 @@
         <record model="ir.model.button" id="contract_review_cancelled_button">
             <field name="name">cancelled</field>
             <field name="string">Cancelled</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
         </record>
         <record model="ir.model.button-res.group"
             id="contract_review_cancelled_button_contract_admin">
@@ -512,7 +512,7 @@
         <!-- Global rules -->
         <record model="ir.rule.group" id="rule_group_contract_companies">
             <field name="name">User in companies</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_contract_companies">
@@ -524,7 +524,7 @@
 
         <record model="ir.rule.group" id="rule_group_contract_review_companies">
             <field name="name">User in companies</field>
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model">contract.review</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_contract_review_companies">
@@ -558,7 +558,7 @@
 
         <record model="ir.rule.group" id="rule_group_contract">
             <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'contract')]"/>
+            <field name="model">contract</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_contract1">
@@ -569,7 +569,7 @@
         </record>
         <record model="ir.rule.group" id="rule_group_contract_line">
               <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'contract.line')]"/>
+            <field name="model">contract.line</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_contract_line1">
@@ -580,7 +580,7 @@
         </record>
         <record model="ir.rule.group" id="rule_group_contract_consumption">
               <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'contract.consumption')]"/>
+            <field name="model">contract.consumption</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_contract_consumption1">

@@ -26,14 +26,14 @@
             id="menu_contract_configuration"
             icon="tryton-list"/>
         <record model="ir.model.access" id="access_contract_configuration">
-            <field name="model" search="[('model', '=', 'contract.configuration')]"/>
+            <field name="model">contract.configuration</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_contract_configuration_admin">
-            <field name="model" search="[('model', '=', 'contract.configuration')]"/>
+            <field name="model">contract.configuration</field>
             <field name="group" ref="contract.group_contract_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
