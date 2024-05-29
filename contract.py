@@ -1319,8 +1319,8 @@ class ContractReviewLine(sequence_ordered(), ModelSQL, ModelView):
 
     @fields.depends('increase_percentage', 'price')
     def on_change_increase_percentage(self):
-        price = self.price or Decimal(0.0)
-        increase_percentage = self.increase_percentage or Decimal(0.0)
+        price = self.price or Decimal(0)
+        increase_percentage = self.increase_percentage or Decimal(0)
         self.updated_price = round(price + (
                 (price * increase_percentage)), price_digits[1])
 
