@@ -259,7 +259,7 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     def search_rec_name(cls, name, clause):
         return ['OR',
             ('number',) + tuple(clause[1:]),
-            ('party.name',) + tuple(clause[1:]),
+            ('party.rec_name',) + tuple(clause[1:]),
             ]
 
     @staticmethod
