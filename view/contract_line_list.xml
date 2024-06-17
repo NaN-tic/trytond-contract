@@ -4,10 +4,11 @@
 <tree>
     <field name="contract"/>
     <field name="service"/>
+    <field name="quantity" symbol="unit" optional="0"/>
     <field name="unit_price"/>
     <field name="start_date"/>
     <field name="end_date"/>
     <field name="contract_state"/>
-    <field name="last_consumption_date"/>
-    <field name="last_consumption_invoice_date"/>
+    <field name="last_consumption_date" optional="1"/>
+    <field name="last_consumption_invoice_date" optional="1"/>
 </tree>

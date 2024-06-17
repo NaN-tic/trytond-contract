@@ -2,18 +2,24 @@
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
 <form>
+    <label name="contract"/>
+    <field name="contract" colspan="4"/>
     <label name="service"/>
     <field name="service"/>
-    <label name="contract"/>
-    <field name="contract"/>
+    <label name="sequence"/>
+    <field name="sequence"/>
     <label name="start_date"/>
     <field name="start_date"/>
     <label name="end_date"/>
     <field name="end_date"/>
+    <label name="quantity"/>
+    <group id="quantity">
+        <field name="quantity"/>
+        <label name="unit"/>
+        <field name="unit"/>
+    </group>
     <label name="unit_price"/>
     <field name="unit_price"/>
-    <label name="sequence"/>
-    <field name="sequence"/>
     <separator name="description" colspan="4"/>
     <field name="description" colspan="4"/>
 </form>
