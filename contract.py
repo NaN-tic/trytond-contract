@@ -588,6 +588,17 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
     description = fields.Text('Description', required=True)
     unit_price = fields.Numeric('Unit Price', digits=price_digits,
         required=True)
+    quantity = fields.Float('Quantity', digits='unit')
+    unit = fields.Many2One('product.uom', 'Unit', states={
+            'required': Bool(Eval('quantity')),
+            }, domain=[
+                If(Bool(Eval('service_unit_category')),
+                    ('category', '=', Eval('service_unit_category')),
+                    ('category', '!=', -1)),
+                ])
+    service_unit_category = fields.Function(fields.Many2One(
+            'product.uom.category', 'Service Unit Category'),
+        'on_change_with_service_unit_category')
     last_consumption_date = fields.Function(fields.Date(
             'Last Consumption Date'), 'get_last_consumption_date',
             searcher='search_last_consumption_dates')
@@ -634,9 +645,16 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
             ('contract.state',) + tuple(clause[1:]),
             ]
 
-    @fields.depends('service', '_parent_service.rec_name', 'unit_price', 'description')
+    @fields.depends('service')
+    def on_change_with_service_unit_category(self, name=None):
+        if self.service:
+            return self.service.product.default_uom_category
+
+    @fields.depends('service', '_parent_service.rec_name', 'unit_price',
+        'description')
     def on_change_service(self):
         if self.service:
+            self.unit = self.service.product.default_uom
             if not self.unit_price:
                 self.unit_price = self.service.product.list_price
             if not self.description:
@@ -869,7 +887,7 @@ class ContractConsumption(ModelSQL, ModelView):
                 (self.end_period_date + datetime.timedelta(days=1) -
                     self.init_period_date).total_seconds())
 
-        invoice_line.quantity = 1
+        invoice_line.quantity = self.contract_line.quantity or 1
         invoice_line.on_change_product()
 
         # set unit_price from service in case on_change_product calculate price
