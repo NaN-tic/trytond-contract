@@ -10,8 +10,8 @@ from sql.conditionals import Case
 from sql.aggregate import Max, Min, Sum
 
 from trytond import backend
-from trytond.model import (Workflow, ModelSQL, ModelView, Model, fields,
-    sequence_ordered)
+from trytond.model import (DeactivableMixin, Workflow, ModelSQL, ModelView,
+    Model, fields, sequence_ordered)
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool, If
 from trytond.transaction import Transaction
@@ -77,7 +77,7 @@ class RRuleMixin(Model):
         return rrule(**values)
 
 
-class ContractService(ModelSQL, ModelView):
+class ContractService(DeactivableMixin, ModelSQL, ModelView):
     'Contract Service'
     __name__ = 'contract.service'
 
