@@ -887,7 +887,10 @@ class ContractConsumption(ModelSQL, ModelView):
                 (self.end_period_date + datetime.timedelta(days=1) -
                     self.init_period_date).total_seconds())
 
-        invoice_line.quantity = self.contract_line.quantity or 1
+        if self.contract_line.quantity is None:
+            invoice_line.quantity = 1
+        else:
+            invoice_line.quantity = self.contract_line.quantity
         invoice_line.on_change_product()
 
         # set unit_price from service in case on_change_product calculate price
