@@ -896,11 +896,7 @@ class ContractConsumption(ModelSQL, ModelView):
         # set unit_price from service in case on_change_product calculate price
         # from the product or from party price list
         unit_price = round_price(self.contract_line.unit_price * rate)
-        if hasattr(InvoiceLine, 'gross_unit_price'):
-            invoice_line.gross_unit_price = unit_price
-            invoice_line.update_prices()
-        else:
-            invoice_line.unit_price = unit_price
+        invoice_line.unit_price = unit_price
 
         invoice_line.description = '[%(start)s - %(end)s] %(name)s' % {
             'start': start_date,
