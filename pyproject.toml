@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trytonspain-contract"
+dependencies = [
+    "trytond-account_invoice~=6.8.0",
+    "trytond-account_product~=6.8.0",
+    "calidae-activity @ git+https://github.com/calidae/trytond-activity.git@pyproject",
+]
+version = "6.8"
+
+dynamic = ["classifiers", "license", "readme", "description"]
+
+[project.entry-points."trytond.modules"]
+contract = "trytond.modules.contract"
+
+[project.scripts]
+[project.gui-scripts]
+
+[tool.hatch.metadata]
+allow-direct-references = true
