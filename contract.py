@@ -495,7 +495,7 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
         for contract in contracts:
             to_create += contract.get_consumptions(date)
 
-        return ContractConsumption.create([x._save_values for x in to_create])
+        return ContractConsumption.create([x._save_values() for x in to_create])
 
     @classmethod
     def default_months_renewal(cls):
@@ -1038,7 +1038,7 @@ class ContractConsumption(ModelSQL, ModelView):
             # payments_terms come from "group_invoic_key" function
             if x.payment_term.id == -1:
                 x.payment_term = None
-        invoices = Invoice.create([x._save_values for x in invoices])
+        invoices = Invoice.create([x._save_values() for x in invoices])
         Invoice.update_taxes(invoices)
         return invoices
 
