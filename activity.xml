@@ -4,7 +4,7 @@
 <tryton>
     <data>
         <record model="activity.reference" id="contract_activity_reference">
-            <field name="model" search="[('model', '=', 'contract.review')]"/>
+            <field name="model" search="[('name', '=', 'contract.review')]"/>
         </record>
     </data>
 </tryton>
