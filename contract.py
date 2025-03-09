@@ -544,13 +544,13 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     @fields.depends('first_invoice_date', 'freq', 'last_month_day_invoice')
     def on_change_notify(self):
         notifications = super().on_change_notify()
-        notifications.append(self._notify_first_invoice_date())
+        notifications.extend(self._notify_first_invoice_date())
         return notifications
 
     def _notify_first_invoice_date(self):
         if (self.freq == 'monthly' and not self.last_month_day_invoice
                 and self.first_invoice_date and self.first_invoice_date.day > 28):
-            return ('warning', gettext('contract.msg_warning_first_invoice_date'))
+            yield ('warning', gettext('contract.msg_warning_first_invoice_date'))
 
 
 class ContractLine(sequence_ordered(), ModelSQL, ModelView):
