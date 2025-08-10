@@ -780,16 +780,6 @@ msgstr "Verträge gruppieren"
 
 msgctxt ""
 "selection:party.party.contract_grouping_method,contract_grouping_method:"
-msgid "Group contracts"
-msgstr "Verträge gruppieren"
-
-msgctxt ""
-"selection:party.party.contract_grouping_method,contract_grouping_method:"
-msgid "None"
-msgstr " - "
-
-msgctxt ""
-"selection:party.party.contract_grouping_method,contract_grouping_method:"
 msgid "None"
 msgstr " - "
 
