@@ -796,12 +796,11 @@ class ContractConsumption(ModelSQL, ModelView):
     invoice_date = fields.Date('Invoice Date', required=True)
     invoice_lines = fields.One2Many('account.invoice.line', 'origin',
         'Invoice Lines', readonly=True)
-    credit_lines = fields.Function(fields.One2Many('account.invoice.line',
-            None, 'Credit Lines',
+    credit_lines = fields.Function(fields.Many2Many('account.invoice.line',
+            None, None, 'Credit Lines',
             states={
                 'invisible': ~Bool(Eval('credit_lines')),
-                }),
-        'get_credit_lines')
+                }), 'get_credit_lines')
     contract = fields.Function(fields.Many2One('contract',
         'Contract'), 'get_contract', searcher='search_contract')
 
