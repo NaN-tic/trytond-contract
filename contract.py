@@ -656,7 +656,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
         if self.service:
             self.unit = self.service.product.default_uom
             if not self.unit_price:
-                self.unit_price = self.service.product.list_price
+                self.unit_price = self.service.product.list_price_used
             if not self.description:
                 self.description = self.service.product.rec_name
 
