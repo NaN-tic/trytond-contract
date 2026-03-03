@@ -9,4 +9,6 @@
         <label name="date"/>
         <field name="date"/>
     </group>
+    <label name="create_consumptions"/>
+    <field name="create_consumptions"/>
 </form>
