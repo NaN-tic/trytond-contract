@@ -143,13 +143,16 @@ class Test(unittest.TestCase):
         create_consumptions.form.date = datetime.date(2020, 1, 31)
         create_consumptions.execute('create_consumptions')
 
-        # Create invoice
+        # Create invoice and consume missing contract lines using wizard default
         Invoice = Model.get('account.invoice')
         create_invoices = Wizard('contract.create_invoices')
         create_invoices.form.date = datetime.date(2020, 2, 15)
+        self.assertTrue(create_invoices.form.create_consumptions)
         create_invoices.execute('create_invoices')
-        invoice, = Invoice.find([])
-        self.assertEqual(line1.analytic_accounts[0].root,
-                         invoice.lines[0].analytic_accounts[0].root)
-        self.assertEqual(line1.analytic_accounts[0].account,
-                         invoice.lines[0].analytic_accounts[0].account)
+        invoices = Invoice.find([])
+        self.assertEqual(len(invoices), 2)
+        for invoice in invoices:
+            self.assertEqual(line1.analytic_accounts[0].root,
+                             invoice.lines[0].analytic_accounts[0].root)
+            self.assertEqual(line1.analytic_accounts[0].account,
+                             invoice.lines[0].analytic_accounts[0].account)

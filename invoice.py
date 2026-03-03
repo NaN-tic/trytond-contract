@@ -22,11 +22,16 @@ class CreateInvoicesStart(ModelView):
     __name__ = 'contract.create_invoices.start'
 
     date = fields.Date('Date')
+    create_consumptions = fields.Boolean('Create Consumptions')
 
     @staticmethod
     def default_date():
         Date = Pool().get('ir.date')
         return Date.today()
+
+    @staticmethod
+    def default_create_consumptions():
+        return True
 
 
 class CreateInvoices(Wizard):
@@ -41,7 +46,15 @@ class CreateInvoices(Wizard):
 
     def do_create_invoices(self, action):
         pool = Pool()
+        Contract = pool.get('contract')
         Consumptions = pool.get('contract.consumption')
+
+        if self.start.create_consumptions:
+            contracts = Contract.search([
+                ('state', 'in', ['confirmed', 'finished']),
+                ('company', '=', Transaction().context.get('company')),
+                ])
+            Contract.consume(contracts, self.start.date)
 
         consumptions = Consumptions.search([
             ('invoice_date', '<=', self.start.date),
