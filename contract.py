@@ -205,7 +205,7 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
     def __register__(cls, module_name):
         Line = Pool().get('contract.line')
 
-        handler = backend.TableHandler(cls, module_name)
+        handler = cls.__table_handler__(module_name)
         first_invoice_date_exist = handler.column_exist('first_invoice_date')
 
         if not handler.column_exist('number'):
@@ -215,7 +215,7 @@ class Contract(RRuleMixin, Workflow, ModelSQL, ModelView):
 
         table = cls.__table__()
         line = Line.__table__()
-        line_handler = backend.TableHandler(Line, module_name)
+        line_handler = Line.__table_handler__(module_name)
         cursor = Transaction().connection.cursor()
 
         # Changed state field values
@@ -617,7 +617,7 @@ class ContractLine(sequence_ordered(), ModelSQL, ModelView):
 
     @classmethod
     def __register__(cls, module_name):
-        table = backend.TableHandler(cls, module_name)
+        table = cls.__table_handler__(module_name)
         super(ContractLine, cls).__register__(module_name)
 
         # start_date not null
