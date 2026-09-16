@@ -1121,7 +1121,10 @@ class ContractReview(Workflow, ModelSQL, ModelView):
             })
     contract = fields.Many2One('contract', 'Contract', required=True,
         ondelete='CASCADE')
-    activities = fields.One2Many('activity.activity', 'resource', 'Activities')
+    activities = fields.One2Many('activity.activity', 'resource', 'Activities',
+        context={
+            'company': Eval('company', -1),
+            }, depends=['company'])
     # TODO: This field is implemented because it is not possible to make
     # comparisons between dates in pyson
     visual = fields.Function(fields.Boolean('Visual'), 'get_visual')
