@@ -6,16 +6,8 @@
         <record model="res.group" id="group_contract_admin">
             <field name="name">Contracts Administration</field>
         </record>
-        <record model="res.user-res.group" id="user_admin_group_contract_admin">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_contract_admin"/>
-        </record>
         <record model="res.group" id="group_contract">
             <field name="name">Contracts</field>
-        </record>
-        <record model="res.user-res.group" id="user_admin_group_contract">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_contract"/>
         </record>
         <record model="ir.ui.view" id="contract_view_form">
             <field name="model">contract</field>
@@ -296,11 +288,6 @@
         </record>
         <record model="ir.sequence.type" id="sequence_type_contract">
             <field name="name">Contract</field>
-        </record>
-        <record model="ir.sequence.type-res.group"
-            id="sequence_type_contract_group_admin">
-            <field name="sequence_type" ref="sequence_type_contract"/>
-            <field name="group" ref="res.group_admin"/>
         </record>
         <record model="ir.sequence.type-res.group"
             id="sequence_type_contract_group_sale_admin">
