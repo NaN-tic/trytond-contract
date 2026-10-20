@@ -1384,3 +1384,5 @@ class Cron(metaclass=PoolMeta):
         cls.method.selection.extend([
             ('contract.review|create_review_cron', "Contract - Create Reviews"),
         ])
+        cls.methods_company_needed.add(
+            'contract.review|create_review_cron')
