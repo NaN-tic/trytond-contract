@@ -860,7 +860,7 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice_line.company = self.contract_line.contract.company
         invoice_line.currency = self.contract_line.contract.currency
         invoice_line.sequence = self.contract_line.sequence
-        invoice_line.party = self.contract_line.contract.party
+        invoice_line.party = self._get_invoice_party()
 
         invoice_line.product = None
         if self.contract_line.service:
@@ -927,6 +927,9 @@ class ContractConsumption(ModelSQL, ModelView):
 
         return invoice_line
 
+    def _get_invoice_party(self):
+        return self.contract_line.contract.party
+
     def get_amount_to_invoice(self):
         pool = Pool()
         Uom = pool.get('product.uom')
@@ -966,7 +969,7 @@ class ContractConsumption(ModelSQL, ModelView):
         else:
             grouping.append(('payment_term', -1),)
 
-        if invoice_line.party.contract_grouping_method is None:
+        if consumption.contract.party.contract_grouping_method is None:
             grouping.append(('contract', consumption.contract_line.contract))
         return grouping
 
@@ -989,7 +992,8 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice = Invoice(**values)
         invoice.on_change_party()
         invoice.journal = journal
-        invoice.payment_term = values['payment_term']
+        if values['payment_term'] != -1:
+            invoice.payment_term = values['payment_term']
         invoice._update_account()
 
         if values.get('contract'):
@@ -1032,11 +1036,6 @@ class ContractConsumption(ModelSQL, ModelView):
                 list(x[1] for x in cons_lines))
             invoices.append(invoice)
 
-        for x in invoices:
-            # We need to emtpy all the payment terms with id -1, this
-            # payments_terms come from "group_invoic_key" function
-            if x.payment_term.id == -1:
-                x.payment_term = None
         invoices = Invoice.create([x._save_values() for x in invoices])
         Invoice.update_taxes(invoices)
         return invoices
