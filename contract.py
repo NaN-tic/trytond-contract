@@ -969,7 +969,9 @@ class ContractConsumption(ModelSQL, ModelView):
         else:
             grouping.append(('payment_term', -1),)
 
-        if consumption.contract.party.contract_grouping_method is None:
+        if invoice_line.party.get_multivalue(
+                'contract_grouping_method',
+                company=invoice_line.company.id) is None:
             grouping.append(('contract', consumption.contract_line.contract))
         return grouping
 
