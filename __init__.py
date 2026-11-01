@@ -5,6 +5,7 @@ from . import configuration
 from . import contract
 from . import invoice
 from . import party
+from . import payer
 
 
 def register():
@@ -26,6 +27,10 @@ def register():
         invoice.CreateInvoicesStart,
         invoice.InvoiceLine,
         invoice.CreditInvoiceStart,
+        module='contract', type_='model')
+    Pool.register(
+        payer.Contract, payer.ContractConsumption,
+        depends=['sale_invoice_grouping_shipment_party'],
         module='contract', type_='model')
     Pool.register(
         contract.AnalyticAccountEntry,

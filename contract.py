@@ -860,7 +860,7 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice_line.company = self.contract_line.contract.company
         invoice_line.currency = self.contract_line.contract.currency
         invoice_line.sequence = self.contract_line.sequence
-        invoice_line.party = self.contract_line.contract.party
+        invoice_line.party = self._get_invoice_party()
 
         invoice_line.product = None
         if self.contract_line.service:
@@ -874,18 +874,6 @@ class ContractConsumption(ModelSQL, ModelView):
                         product=invoice_line.product.rec_name))
 
         start_date, end_date = self._get_start_end_date()
-        if self.end_period_date == self.init_period_date:
-            rate = Decimal(0)
-        else:
-            # Compute quantity based on dates
-            # We add 1 day to end_date and end_period date to correctly
-            #   calculate periods. for example:
-            #   (31-01-2015 - 01-01-2015) = 30 days + 1
-            rate = Decimal((self.end_date + datetime.timedelta(days=1)
-                    - self.start_date).total_seconds() /
-                (self.end_period_date + datetime.timedelta(days=1) -
-                    self.init_period_date).total_seconds())
-
         if self.contract_line.quantity is None:
             invoice_line.quantity = 1
         else:
@@ -894,8 +882,7 @@ class ContractConsumption(ModelSQL, ModelView):
 
         # set unit_price from service in case on_change_product calculate price
         # from the product or from party price list
-        unit_price = round_price(self.contract_line.unit_price * rate)
-        invoice_line.unit_price = unit_price
+        invoice_line.unit_price = self.get_invoice_unit_price()
 
         invoice_line.description = '[%(start)s - %(end)s] %(name)s' % {
             'start': start_date,
@@ -926,6 +913,25 @@ class ContractConsumption(ModelSQL, ModelView):
                     'origin': invoice_line.id})
 
         return invoice_line
+
+    def get_invoice_unit_price(self):
+        """Return the prorated unit price for this consumption."""
+        if self.end_period_date == self.init_period_date:
+            rate = Decimal(0)
+        else:
+            # Compute quantity based on dates
+            # We add 1 day to end_date and end_period date to correctly
+            #   calculate periods. for example:
+            #   (31-01-2015 - 01-01-2015) = 30 days + 1
+            rate = Decimal((self.end_date + datetime.timedelta(days=1)
+                    - self.start_date).total_seconds() /
+                (self.end_period_date + datetime.timedelta(days=1) -
+                    self.init_period_date).total_seconds())
+
+        return round_price(self.contract_line.unit_price * rate)
+
+    def _get_invoice_party(self):
+        return self.contract_line.contract.party
 
     def get_amount_to_invoice(self):
         pool = Pool()
@@ -966,7 +972,9 @@ class ContractConsumption(ModelSQL, ModelView):
         else:
             grouping.append(('payment_term', -1),)
 
-        if invoice_line.party.contract_grouping_method is None:
+        if invoice_line.party.get_multivalue(
+                'contract_grouping_method',
+                company=invoice_line.company.id) is None:
             grouping.append(('contract', consumption.contract_line.contract))
         return grouping
 
@@ -989,7 +997,8 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice = Invoice(**values)
         invoice.on_change_party()
         invoice.journal = journal
-        invoice.payment_term = values['payment_term']
+        if values['payment_term'] != -1:
+            invoice.payment_term = values['payment_term']
         invoice._update_account()
 
         if values.get('contract'):
@@ -1032,11 +1041,6 @@ class ContractConsumption(ModelSQL, ModelView):
                 list(x[1] for x in cons_lines))
             invoices.append(invoice)
 
-        for x in invoices:
-            # We need to emtpy all the payment terms with id -1, this
-            # payments_terms come from "group_invoic_key" function
-            if x.payment_term.id == -1:
-                x.payment_term = None
         invoices = Invoice.create([x._save_values() for x in invoices])
         Invoice.update_taxes(invoices)
         return invoices
