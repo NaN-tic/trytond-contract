@@ -33,6 +33,8 @@ class Test(unittest.TestCase):
         # Create company
         _ = create_company()
         company = get_company()
+        company.timezone = 'Europe/Madrid'
+        company.save()
 
         # Create fiscal year
         fiscalyear = set_fiscalyear_invoice_sequences(
