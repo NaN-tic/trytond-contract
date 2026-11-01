@@ -1,4 +1,16 @@
+from trytond.model import fields
 from trytond.pool import PoolMeta
+
+
+class Contract(metaclass=PoolMeta):
+    __name__ = 'contract'
+
+    @fields.depends('party')
+    def on_change_party(self):
+        super().on_change_party()
+        if self.party:
+            payer = self.party.party_sale_payer or self.party
+            self.payment_term = payer.customer_payment_term
 
 
 class ContractConsumption(metaclass=PoolMeta):

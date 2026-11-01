@@ -874,18 +874,6 @@ class ContractConsumption(ModelSQL, ModelView):
                         product=invoice_line.product.rec_name))
 
         start_date, end_date = self._get_start_end_date()
-        if self.end_period_date == self.init_period_date:
-            rate = Decimal(0)
-        else:
-            # Compute quantity based on dates
-            # We add 1 day to end_date and end_period date to correctly
-            #   calculate periods. for example:
-            #   (31-01-2015 - 01-01-2015) = 30 days + 1
-            rate = Decimal((self.end_date + datetime.timedelta(days=1)
-                    - self.start_date).total_seconds() /
-                (self.end_period_date + datetime.timedelta(days=1) -
-                    self.init_period_date).total_seconds())
-
         if self.contract_line.quantity is None:
             invoice_line.quantity = 1
         else:
@@ -894,8 +882,7 @@ class ContractConsumption(ModelSQL, ModelView):
 
         # set unit_price from service in case on_change_product calculate price
         # from the product or from party price list
-        unit_price = round_price(self.contract_line.unit_price * rate)
-        invoice_line.unit_price = unit_price
+        invoice_line.unit_price = self.get_invoice_unit_price()
 
         invoice_line.description = '[%(start)s - %(end)s] %(name)s' % {
             'start': start_date,
@@ -926,6 +913,22 @@ class ContractConsumption(ModelSQL, ModelView):
                     'origin': invoice_line.id})
 
         return invoice_line
+
+    def get_invoice_unit_price(self):
+        """Return the prorated unit price for this consumption."""
+        if self.end_period_date == self.init_period_date:
+            rate = Decimal(0)
+        else:
+            # Compute quantity based on dates
+            # We add 1 day to end_date and end_period date to correctly
+            #   calculate periods. for example:
+            #   (31-01-2015 - 01-01-2015) = 30 days + 1
+            rate = Decimal((self.end_date + datetime.timedelta(days=1)
+                    - self.start_date).total_seconds() /
+                (self.end_period_date + datetime.timedelta(days=1) -
+                    self.init_period_date).total_seconds())
+
+        return round_price(self.contract_line.unit_price * rate)
 
     def _get_invoice_party(self):
         return self.contract_line.contract.party

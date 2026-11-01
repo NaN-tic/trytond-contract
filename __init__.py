@@ -29,7 +29,7 @@ def register():
         invoice.CreditInvoiceStart,
         module='contract', type_='model')
     Pool.register(
-        payer.ContractConsumption,
+        payer.Contract, payer.ContractConsumption,
         depends=['sale_invoice_grouping_shipment_party'],
         module='contract', type_='model')
     Pool.register(
