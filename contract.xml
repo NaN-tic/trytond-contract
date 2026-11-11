@@ -636,4 +636,30 @@
             id="menu_create_reviews"/>
 
     </data>
+    <data>
+        <record model="ir.action-res.group" id="create_consumptions_group_contract">
+            <field name="action" ref="wizard_create_consumptions"/>
+            <field name="group" ref="group_contract"/>
+        </record>
+        <record model="ir.action-res.group" id="create_consumptions_group_contract_admin">
+            <field name="action" ref="wizard_create_consumptions"/>
+            <field name="group" ref="group_contract_admin"/>
+        </record>
+        <record model="ir.action-res.group" id="create_invoices_group_contract">
+            <field name="action" ref="wizard_create_invoices"/>
+            <field name="group" ref="group_contract"/>
+        </record>
+        <record model="ir.action-res.group" id="create_invoices_group_contract_admin">
+            <field name="action" ref="wizard_create_invoices"/>
+            <field name="group" ref="group_contract_admin"/>
+        </record>
+        <record model="ir.action-res.group" id="create_reviews_group_contract">
+            <field name="action" ref="wizard_create_reviews"/>
+            <field name="group" ref="group_contract"/>
+        </record>
+        <record model="ir.action-res.group" id="create_reviews_group_contract_admin">
+            <field name="action" ref="wizard_create_reviews"/>
+            <field name="group" ref="group_contract_admin"/>
+        </record>
+    </data>
 </tryton>
