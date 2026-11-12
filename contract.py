@@ -997,8 +997,7 @@ class ContractConsumption(ModelSQL, ModelView):
         invoice = Invoice(**values)
         invoice.on_change_party()
         invoice.journal = journal
-        if values['payment_term'] != -1:
-            invoice.payment_term = values['payment_term']
+        invoice.payment_term = values['payment_term']
         invoice._update_account()
 
         if values.get('contract'):
@@ -1041,6 +1040,10 @@ class ContractConsumption(ModelSQL, ModelView):
                 list(x[1] for x in cons_lines))
             invoices.append(invoice)
 
+        for invoice in invoices:
+            # The grouping key uses -1 for contracts without a payment term.
+            if invoice.payment_term.id == -1:
+                invoice.payment_term = None
         invoices = Invoice.create([x._save_values() for x in invoices])
         Invoice.update_taxes(invoices)
         return invoices

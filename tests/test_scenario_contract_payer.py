@@ -21,7 +21,7 @@ class TestContractPayer(unittest.TestCase):
         super().tearDown()
 
     def test(self):
-        activate_modules(['contract', 'sale_invoice_grouping_shipment_party'])
+        activate_modules('contract')
         create_company()
         company = get_company()
         company.timezone = 'Europe/Madrid'
@@ -38,8 +38,7 @@ class TestContractPayer(unittest.TestCase):
         payer = Party(name='Payer', customer_payment_term=term,
             contract_grouping_method='contract')
         payer.save()
-        customers = [Party(name=name, party_sale_payer=payer,
-            customer_payment_term=other_term) for name in ('Customer A', 'Customer B')]
+        customers = [Party(name=name, customer_payment_term=other_term) for name in ('Customer A', 'Customer B')]
         Party.save(customers)
         Category = Model.get('product.category')
         category = Category(name='Accounting', accounting=True,
@@ -61,11 +60,17 @@ class TestContractPayer(unittest.TestCase):
         configuration.save()
         Contract = Model.get('contract')
         contracts = []
-        for customer in (customers[0], customers[0], customers[1]):
+        for index, customer in enumerate((customers[0], customers[0], customers[1])):
             contract = Contract(party=customer, company=company,
                 freq='monthly', interval=1, start_period_date=date(2026, 1, 1),
                 first_invoice_date=date(2026, 1, 31))
-            self.assertEqual(contract.payment_term, term)
+            self.assertEqual(contract.payment_term, other_term)
+            # Preserve the customer default, an explicit contract term and
+            # an explicitly empty term without sales payer integration.
+            if index == 0:
+                contract.payment_term = term
+            elif index == 1:
+                contract.payment_term = None
             contract.lines.new(service=service, start_date=date(2026, 1, 1),
                 end_date=date(2026, 1, 15), quantity=2, unit_price=Decimal('310'))
             contract.save()
@@ -80,11 +85,18 @@ class TestContractPayer(unittest.TestCase):
         Consumption.click(consumptions, 'generate_invoice')
         Invoice = Model.get('account.invoice')
         invoices = Invoice.find()
-        self.assertEqual(len(invoices), 2)
-        self.assertEqual({invoice.party for invoice in invoices}, {payer})
-        by_customer = {invoice.shipment_party: invoice for invoice in invoices}
-        self.assertEqual(by_customer[customers[0]].untaxed_amount, Decimal('600'))
-        self.assertEqual(by_customer[customers[1]].untaxed_amount, Decimal('300'))
-        self.assertTrue(all(invoice.payment_term == term for invoice in invoices))
-        self.assertTrue(all(line.unit_price == Decimal('150')
-            for invoice in invoices for line in invoice.lines))
+        self.assertEqual(len(invoices), 3)
+        for consumption in consumptions:
+            consumption.reload()
+        by_contract = {consumption.contract_line.contract:
+            consumption.invoice_lines[0].invoice for consumption in consumptions}
+        self.assertEqual(by_contract[contracts[0]].payment_term, term)
+        self.assertIsNone(by_contract[contracts[1]].payment_term)
+        self.assertEqual(by_contract[contracts[2]].payment_term, other_term)
+        for contract in contracts:
+            invoice = by_contract[contract]
+            self.assertEqual(invoice.party, contract.party)
+            self.assertNotEqual(invoice.party, payer)
+            self.assertEqual(invoice.untaxed_amount, Decimal('300'))
+            self.assertTrue(all(line.unit_price == Decimal('150')
+                for line in invoice.lines))
