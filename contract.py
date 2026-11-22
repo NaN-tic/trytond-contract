@@ -1020,8 +1020,6 @@ class ContractConsumption(ModelSQL, ModelView):
 
     @classmethod
     def _invoice(cls, consumptions):
-        pool = Pool()
-        Invoice = pool.get('account.invoice')
         lines = {}
         for consumption in consumptions:
             line = consumption.get_invoice_line()
@@ -1042,8 +1040,13 @@ class ContractConsumption(ModelSQL, ModelView):
 
         for invoice in invoices:
             # The grouping key uses -1 for contracts without a payment term.
-            if invoice.payment_term.id == -1:
+            if invoice.payment_term and invoice.payment_term.id == -1:
                 invoice.payment_term = None
+        return cls._create_consumption_invoices(invoices)
+
+    @classmethod
+    def _create_consumption_invoices(cls, invoices):
+        Invoice = Pool().get('account.invoice')
         invoices = Invoice.create([x._save_values() for x in invoices])
         Invoice.update_taxes(invoices)
         return invoices
