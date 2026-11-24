@@ -1047,8 +1047,10 @@ class ContractConsumption(ModelSQL, ModelView):
     @classmethod
     def _create_consumption_invoices(cls, invoices):
         Invoice = Pool().get('account.invoice')
-        invoices = Invoice.create([x._save_values() for x in invoices])
-        Invoice.update_taxes(invoices)
+        for invoice in invoices:
+            with Transaction().set_context(company=invoice.company.id):
+                invoice.on_change_lines()
+        Invoice.save(invoices)
         return invoices
 
     @classmethod
